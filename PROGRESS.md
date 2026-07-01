@@ -1,7 +1,5 @@
 # Progress Tracker
 
-Следва фазите от Home Lab Roadmap-а (MASTER-CONTEXT-v7). Обновявай при всяко приключено ниво/фаза.
-
 ## Certification path
 
 - [ ] eJPT — in progress
@@ -66,7 +64,7 @@
 - [ ] THM — Ignite
 - [ ] THM — Bounty Hacker
 - [ ] THM — Crack The Hash
-- [ ] (продължава по 200-machine листа в MASTER-CONTEXT-v7)
+- [ ] (списъкът продължава — ще се допълва прогресивно)
 
 ## Phase 2 — Mini Active Directory
 
