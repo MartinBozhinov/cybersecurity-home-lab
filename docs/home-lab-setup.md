@@ -18,12 +18,12 @@ Windows 11 + VirtualBox
 ## Networking
 
 - Host-Only network: `192.168.56.0/24`
-- HTB VPN: свързан от Kali Linux
+- HTB VPN: connected from Kali Linux
 
 ## Tooling
 
 - HTB Academy — Silver plan (Tier I + II)
 - PortSwigger Web Academy — free web exploitation practice
-- Windows VM license — `slmgr /rearm` + snapshot преди изтичане
+- Windows VM license — `slmgr /rearm` + snapshot before expiry
 
 See [network-diagram.md](network-diagram.md) for topology.

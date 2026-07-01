@@ -56,15 +56,16 @@
 
 ## Retired machine write-ups
 
-- [ ] HTB Starting Point — Fawn
-- [ ] HTB Starting Point — Dancing
-- [ ] THM — Pickle Rick
+- [x] HTB Starting Point — Meow
+- [x] HTB Starting Point — Fawn
+- [x] HTB Starting Point — Dancing
+- [x] THM — Pickle Rick
 - [ ] THM — RootMe
 - [ ] THM — Simple CTF
 - [ ] THM — Ignite
 - [ ] THM — Bounty Hacker
 - [ ] THM — Crack The Hash
-- [ ] (списъкът продължава — ще се допълва прогресивно)
+- [ ] (list continues — updated progressively)
 
 ## Phase 2 — Mini Active Directory
 
@@ -80,6 +81,6 @@
 - [ ] Isolated internal network segment
 - [ ] SSH dynamic port forwarding / Chisel / Proxychains
 
-## Phase 4 — Detection / Blue Team (след CPTS)
+## Phase 4 — Detection / Blue Team (after CPTS)
 
 - [ ] ELK Stack / Splunk Free monitoring setup

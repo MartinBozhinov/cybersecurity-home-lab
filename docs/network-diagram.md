@@ -31,4 +31,4 @@ flowchart LR
     Pivot -->|SSH dynamic port forward / Chisel / Proxychains| Internal["Isolated internal segment 192.168.57.0/24"]
 ```
 
-Всички IP диапазони са private/lab-only (RFC 1918), без реални external адреси.
+All IP ranges are private/lab-only (RFC 1918), no real external addresses.
