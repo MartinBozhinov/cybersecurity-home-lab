@@ -17,4 +17,5 @@ content, no real credentials, and all target addresses are placeholders
 | [webdav-exploitation.md](webdav-exploitation.md) | davtest, cadaver, hydra, webshell upload |
 | [pass-the-hash.md](pass-the-hash.md) | NTLM Pass-the-Hash (crackmapexec, psexec) |
 | [cve/ms17-010-eternalblue.md](cve/ms17-010-eternalblue.md) | SMBv1 RCE (CVE-2017-0144) |
-| [cve/cve-2019-0708-bluekeep.md](cve/cve-2019-0
+| [cve/cve-2019-0708-bluekeep.md](cve/cve-2019-0708-bluekeep.md) | RDP pre-auth RCE |
+| [cve/cve-2014-6271-shellshock.md](cve/cve-2014-6271-shellshock.md) | Bash/CGI RCE |
