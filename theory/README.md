@@ -15,7 +15,6 @@ content, no real credentials, and all target addresses are placeholders
 | [vulnerability-scanning-with-metasploit.md](vulnerability-scanning-with-metasploit.md) | MSF DB workflow, payload selection, searchsploit |
 | [vulnerability-scanning-nessus-wmap.md](vulnerability-scanning-nessus-wmap.md) | Nessus scan + import, WMAP web scanner |
 | [webdav-exploitation.md](webdav-exploitation.md) | davtest, cadaver, hydra, webshell upload |
-| [pass-the-hash.md](pass-the-hash.md) | NTLM Pass-the-Hash (crackmapexec, psexec) |
-| [cve/ms17-010-eternalblue.md](cve/ms17-010-eternalblue.md) | SMBv1 RCE (CVE-2017-0144) |
-| [cve/cve-2019-0708-bluekeep.md](cve/cve-2019-0708-bluekeep.md) | RDP pre-auth RCE |
-| [cve/cve-2014-6271-shellshock.md](cve/cve-2014-6271-shellshock.md) | Bash/CGI RCE |
+| [windows-privilege-escalation.md](windows-privilege-escalation.md) | Kernel exploits, UAC bypass (UACMe), token impersonation, Potato attacks |
+| [windows-alternate-data-streams.md](windows-alternate-data-streams.md) | NTFS ADS — hiding/running payloads, `dir /r` detection |
+| [windows-credential-dumping.md](windows-credential-dumping.md) | U
